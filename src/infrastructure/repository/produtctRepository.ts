@@ -1,26 +1,33 @@
 import type { PrismaClient } from "@prisma/client";
 import type { IProduct, PRODUCT } from "../../domain/Interfaces/IProduct.js";
 
-export class ProductRepositpry implements IProduct {
-    constructor(private ProdRepository: PrismaClient) { }
+export class ProductRepository implements IProduct {
+  constructor(private prisma: PrismaClient) {}
 
-    findById = async (id: number) => {
-        const produtos = await this.ProdRepository.produto.findMany({
-            where: {
-                id
-            }
-        })
-        return produtos
-    }
+  async create(product: PRODUCT): Promise<PRODUCT> {
+    const produtoNew = await this.prisma.produto.create({
+      data: {
+        nome: product.nome,
+        estoque: product.estoque,
+        preco: product.preco,
+      },
+    });
+    return produtoNew;
+  }
 
-    create = async (Product: PRODUCT): Promise<PRODUCT> => {
-        const produtoNew = await this.ProdRepository.produto.create({
-            data: {
-                nome: Product.nome,
-                estoque: Product.estoque,
-                preco: Product.preco
-            }
-        })
-        return produtoNew
-    }
-} 
+  async findById(id: number): Promise<PRODUCT | null> {
+    const produto = await this.prisma.produto.findUnique({
+      where: { id },
+    });
+    return produto;
+  }
+
+  async findManyByIds(ids: number[]): Promise<PRODUCT[]> {
+    const produtos = await this.prisma.produto.findMany({
+      where: {
+        id: { in: ids },
+      },
+    });
+    return produtos;
+  }
+}

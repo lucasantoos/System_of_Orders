@@ -1,47 +1,51 @@
-
 import { Decimal } from "@prisma/client/runtime/library";
 import type { IOrder } from "../../domain/Interfaces/IOrder.js";
 import type { IProduct } from "../../domain/Interfaces/IProduct.js";
 
 export class OrderService {
-    constructor(private OrderREpository: IOrder,
+    constructor(
+        private OrderRepository: IOrder,
         private ProductRepository: IProduct
     ) { }
 
-    async CreateOrder(ORDER: { produto: number, quantidade: number }) {
-
-
-        if (!ORDER.produto) throw new Error("por favor preencha todas as informações do produtos")
-
-        const productExistis = await this.ProductRepository.findById(ORDER.produto)
-
-        if (!productExistis || productExistis.length === 0) {
-            throw new Error("produto não existe")
+    async CreateOrder(orderData: { produtos: { produtoId: number; quantidade: number }[] }) {
+        if (!orderData.produtos || orderData.produtos.length === 0) {
+            throw new Error("Por favor, informe ao menos um produto no pedido.");
         }
 
-        const preco_total = productExistis.reduce((acc, item) => {
-            return acc + (item.preco.toNumber() * ORDER.quantidade)
-        }, 0)
+        const ids = orderData.produtos.map(p => p.produtoId);
+        const produtosEncontrados = await this.ProductRepository.findManyByIds(ids);
 
-        const totais = Decimal(preco_total)
+        if (!produtosEncontrados || produtosEncontrados.length === 0) {
+            throw new Error("Nenhum dos produtos informados existe.");
+        }
 
 
-        productExistis.map(i => {
-            this.OrderREpository.save({
-                total: totais,
-                data_pedido: new Date(),
-                produto: {
-                    podutoId: ORDER.produto,
-                    quantidade: ORDER.quantidade,
-                    preco_unitario: i.preco
-                }
+        const total = produtosEncontrados.reduce((acc, item) => {
+            const produtoNoPedido = orderData.produtos.find(p => p.produtoId === item.id);
+            if (!produtoNoPedido) return acc;
+            return acc + (item.preco.toNumber() * produtoNoPedido.quantidade);
+        }, 0);
+
+        for (const p of orderData.produtos) {
+            const existe = produtosEncontrados.find(prod => prod.id === p.produtoId);
+            if (!existe) throw new Error(`Produto ID ${p.produtoId} não encontrado no banco`);
+        }
+
+
+        const newOrder = await this.OrderRepository.save({
+            total: new Decimal(total),
+            data_pedido: new Date(),
+            produtos: orderData.produtos.map(p => {
+                const produtoEncontrado = produtosEncontrados.find(i => i.id === p.produtoId);
+                return {
+                    produtoId: p.produtoId,
+                    quantidade: p.quantidade,
+                    preco_unitario: produtoEncontrado?.preco || new Decimal(0)
+                };
             })
+        });
 
-        })
-        return productExistis
-
-
+        return newOrder;
     }
-
 }
-

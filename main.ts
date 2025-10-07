@@ -2,7 +2,7 @@ import fastify from "fastify"
 import dotenv from "dotenv"
 import formbody from "@fastify/formbody"
 import { Routers } from "./src/Http/routers/main.Router.js"
-import { ProductRepositpry } from "./src/infrastructure/repository/produtctRepository.js"
+import { ProductRepository } from "./src/infrastructure/repository/produtctRepository.js"
 import Prisma from "./src/infrastructure/database/db.js"
 import { ProductService } from "./src/application/service/ProductService.js"
 import { ProductController } from "./src/Http/controller/product.Controller.js"
@@ -19,12 +19,10 @@ const env: any = {
     SECRET_KEY: process.env.SECRET_KEY
 }
 
-app.register(formbody)
-app.register(Routers)
 
 
 // dependencias de Products 
-const produtoRepo = new ProductRepositpry(Prisma)
+const produtoRepo = new ProductRepository(Prisma)
 const produtoServi = new ProductService(produtoRepo)
 const produtoController = new ProductController(produtoServi)
 
@@ -33,8 +31,8 @@ const orderReposi = new OrderRepository(Prisma)
 const orderService = new OrderService(orderReposi, produtoRepo)
 const orderController = new OrderController(orderService)
 
-
-
+app.register(formbody)
+app.register(Routers)
 
 
 
