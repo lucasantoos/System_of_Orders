@@ -44,8 +44,18 @@ export class OrderService {
                     preco_unitario: produtoEncontrado?.preco || new Decimal(0)
                 };
             })
-        });
+        })
 
         return newOrder;
+    }
+
+
+    async ListOrder(id:number){
+
+            const ordersAll = await this.OrderRepository.find(id)
+
+        if(!ordersAll) throw new Error("Produto não existe")
+
+            return ordersAll
     }
 }

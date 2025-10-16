@@ -17,5 +17,14 @@ export class ProductController {
         }
     }
 
+    ListProduct = async (req: any, rep: any) => {
+        try {
+            const {id} = req.params
+            return rep.status(201).send(await this.ServicProduct.ListAllProducts(parseInt(id)))
+        } catch (e: any) {
+            return rep.status(400).send({ Erro: e.message })
+        }
+    }
+
 
 }
