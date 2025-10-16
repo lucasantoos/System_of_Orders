@@ -1,14 +1,14 @@
 import fastify from "fastify"
 import dotenv from "dotenv"
 import formbody from "@fastify/formbody"
-import { Routers } from "./src/Http/routers/main.Router.js"
-import { ProductRepository } from "./src/infrastructure/repository/produtctRepository.js"
-import Prisma from "./src/infrastructure/database/db.js"
-import { ProductService } from "./src/application/service/ProductService.js"
-import { ProductController } from "./src/Http/controller/product.Controller.js"
-import { OrderRepository } from "./src/infrastructure/repository/orderRepository.js"
-import { OrderService } from "./src/application/service/OrderService.js"
-import { OrderController } from "./src/Http/controller/order.controller.js"
+import { Routers } from "./Http/routers/main.Router.js"
+import { ProductRepository } from "./infrastructure/repository/produtctRepository.js"
+import Prisma from "./infrastructure/database/db.js"
+import { ProductService } from "./application/service/ProductService.js"
+import { ProductController } from "./Http/controller/product.Controller.js"
+import { OrderRepository } from "./infrastructure/repository/orderRepository.js"
+import { OrderService } from "./application/service/OrderService.js"
+import { OrderController } from "./Http/controller/order.controller.js"
 
 
 dotenv.config()
