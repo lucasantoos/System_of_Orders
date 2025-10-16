@@ -7,7 +7,7 @@
     "node": "20"
   },
   "scripts": {
-    "test": "node --watch --loader ts-node/esm main.ts",
+    "test": "node --watch --loader ts-node/esm src/main.ts",
     "build": "npx tsc",
     "start": "node dist/main.js"
   },

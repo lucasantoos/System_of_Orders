@@ -6,7 +6,12 @@ export class ProductController {
     createProductService = async (req: any, rep: any) => {
         try {
             const { nome, preco, estoque } = req.body
-            return rep.status(201).send(await this.ServicProduct.CreateProdutc({ nome, preco, estoque }))
+            const obj = {
+                nome,
+                preco,
+                estoque:parseInt(estoque)
+            }
+            return rep.status(201).send(await this.ServicProduct.CreateProdutc({ nome, preco, estoque: obj.estoque }))
         } catch (e: any) {
             return rep.status(400).send({ Erro: e.message })
         }
