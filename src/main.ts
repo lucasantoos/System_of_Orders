@@ -14,11 +14,6 @@ import { OrderController } from "./Http/controller/order.controller.js"
 dotenv.config()
 const app = fastify()
 
-const env: any = {
-    PORT: process.env.PORT ?? 3000,
-    SECRET_KEY: process.env.SECRET_KEY
-}
-
 
 
 // dependencias de Products 
@@ -37,8 +32,11 @@ app.register(Routers)
 
 
 
-app.listen({ port: env.PORT }, () => {
-    console.log(`server is running in port: ${env.PORT}`)
+app.listen({
+    host: "0.0.0.0",
+    port: process.env.PORT ? Number(process.env.PORT) : 3000
+}, () => {
+    console.log(`server is running in port: ${process.env.PORT || 3000}`)
 })
 
 export { produtoController, orderController }
