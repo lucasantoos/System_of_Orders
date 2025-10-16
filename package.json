@@ -3,8 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "20"
+  },
   "scripts": {
-    "test": "node --watch --loader ts-node/esm main.ts"
+    "test": "node --watch --loader ts-node/esm main.ts",
+    "build": "npx tsc",
+    "start": "node dist/main.js"
   },
   "keywords": [],
   "author": "",
