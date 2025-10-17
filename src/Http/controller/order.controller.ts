@@ -5,7 +5,7 @@ export class OrderController {
 
   createOrder = async (req: any, rep: any) => {
     try {
-      const { produtos } = req.body;
+      const produtos  = req.body;
 
       if (!Array.isArray(produtos) || produtos.length === 0) {
         return rep.status(400).send({ erro: "É necessário enviar uma lista de produtos." });
@@ -25,7 +25,7 @@ export class OrderController {
     try {
       const { id } = req.params
 
-      const produto = await this.serviceOrder.ListOrder(parseInt(id))
+      const produto = await this.serviceOrder.ListOrder(id)
 
       return rep.status(200).send({ produto })
     } catch (e: any) {
