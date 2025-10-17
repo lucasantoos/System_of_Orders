@@ -6,6 +6,8 @@ export class ProductService {
 
 
     async ListAllProducts(id:number){
+
+        if(!id || id == 0)throw new Error("Busca inválida")
         const productsExits = await this.InterfaceReposiProduct.findById(id)
 
         if(!productsExits) throw new Error("Produto incexistente neste sistema")
