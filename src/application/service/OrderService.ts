@@ -51,7 +51,7 @@ export class OrderService {
 
 
     async ListOrder(id:number){
-
+        if (typeof (id) != typeof (Number()) || id < 1) throw new Error("busca inválida")
             const ordersAll = await this.OrderRepository.find(id)
 
         if(!ordersAll) throw new Error("Produto não existe")
